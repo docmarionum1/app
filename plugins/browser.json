@@ -63,6 +63,9 @@
         },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "edu.nyu.cusp.wifi"
+        },
+        "com.pylonproducts.wifiwizard": {
+            "PACKAGE_NAME": "edu.nyu.cusp.wifi"
         }
     },
     "dependent_plugins": {

@@ -33,7 +33,19 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-        app.receivedEvent('deviceready');
+        //app.receivedEvent('deviceready');
+        document.getElementById('log').innerHTML = "Starting";
+        setInterval(function() {
+          WifiWizard.getScanResults(function(results) {
+            var text = "";
+            for (var i = 0; i < results.length; i++) {
+              text += results[i].SSID + "(" + results[i].level + ")<br/>";
+            }
+            document.getElementById('log').innerHTML = text;
+          }, function(results) {
+            document.getElementById('log').innerHTML = "failed"
+          });
+        }, 5000);
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {

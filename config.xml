@@ -30,6 +30,7 @@
     <plugin name="cordova-plugin-statusbar" source="npm" spec="&gt;1.0.0" />
     <plugin name="cordova-plugin-vibration" source="npm" spec="&gt;1.0.0" />
     <plugin name="cordova-plugin-whitelist" source="npm" spec="&gt;1.0.0" />
+    <plugin name="wifiwizard" />
     <platform name="android">
         <icon density="ldpi" src="res/icon/android/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="res/icon/android/drawable-mdpi-icon.png" />
