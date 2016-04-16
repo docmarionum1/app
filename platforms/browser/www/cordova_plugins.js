@@ -602,6 +602,14 @@ module.exports = [
             "navigator.notification",
             "navigator"
         ]
+    },
+    {
+        "file": "plugins/com.pylonproducts.wifiwizard/www/WifiWizard.js",
+        "id": "com.pylonproducts.wifiwizard.WifiWizard",
+        "pluginId": "com.pylonproducts.wifiwizard",
+        "clobbers": [
+            "window.WifiWizard"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -626,7 +634,8 @@ module.exports.metadata =
     "cordova-plugin-splashscreen": "3.2.1",
     "cordova-plugin-statusbar": "2.1.2",
     "cordova-plugin-vibration": "2.1.0",
-    "cordova-plugin-whitelist": "1.2.1"
+    "cordova-plugin-whitelist": "1.2.1",
+    "com.pylonproducts.wifiwizard": "0.2.11"
 }
 // BOTTOM OF METADATA
 });
