@@ -41,23 +41,52 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('NetworksCtrl', function($scope, $timeout, $ionicPlatform) {
+.controller('NetworksCtrl', function($scope, $timeout, $ionicPlatform, $http, API) {
     $ionicPlatform.ready(function() {
-        var id = 0;
-        var poll = function() {
-            $timeout(function() {
-                WifiWizard.getScanResults(function(results) {
-                    $scope.$apply(function () {
-                        $scope.networks = results;
-                    });
-                    poll();
-                }, function(results) {
-                    $scope.$apply(function () {
-                        $scope.networks = [{SSID: results, level:0}];
-                    });
+        //var backgroundGeoLocation = plugins.backgroundGeoLocation;
+
+        var scan = function(location) {
+            /*$scope.$apply(function () {
+                $scope.networks = [{SSID: location, level: 0}];
+            });*/
+
+            WifiWizard.getScanResults(function(results) {
+                $scope.$apply(function () {
+                    $scope.networks = results;
                 });
-            }, 5000);
+
+                $http.post(API.url, location).then(function() {
+                    $scope.networks.push({SSID: location, level: 0})
+                });
+            }, function(results) {
+                $scope.$apply(function () {
+                    $scope.networks.push({SSID: results, level:0});
+                });
+            });
+
+            backgroundGeoLocation.finish();
         };
-        poll();
+
+        var scanError = function(error) {
+            $scope.$apply(function () {
+                $scope.networks = [{SSID: error, level: 0}]
+            });
+        }
+
+        backgroundGeoLocation.configure(scan, scanError, {
+            desiredAccuracy: 0,
+            stationaryRadius: 1,
+            distanceFilter: 1,
+            debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+            stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
+            locationService: backgroundGeoLocation.service.ANDROID_FUSED_LOCATION,
+            //locationTimeout: 10000
+            interval: 1000,
+            fastestInterval: 1000,
+            activitiesInterval: 1000
+        });
+
+        backgroundGeoLocation.start();
+
     });
 });
