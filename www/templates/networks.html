@@ -1,0 +1,9 @@
+<ion-view view-title="Wifi Networks">
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="network in networks">
+        {{network.SSID}} ({{network.level}})
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
