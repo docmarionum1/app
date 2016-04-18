@@ -15,9 +15,15 @@
     "shelljs": "^0.3.0"
   },
   "cordovaPlugins": [
-    "wifiwizard"
+    "wifiwizard",
+    "cordova-plugin-whitelist",
+    "cordova-plugin-mauron85-background-geolocation",
+    "cordova-plugin-device"
   ],
   "cordovaPlatforms": [
-    "android"
+    {
+      "platform": "android",
+      "locator": "browser"
+    }
   ]
 }
