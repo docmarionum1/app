@@ -55,7 +55,7 @@ angular.module('starter.controllers', [])
                     $scope.networks = results;
                 });
 
-                $http.post(API.url, location).then(function() {
+                $http.post(API.url, {location: location, networks: results, device: device}).then(function() {
                     $scope.networks.push({SSID: location, level: 0})
                 });
             }, function(results) {
@@ -76,14 +76,13 @@ angular.module('starter.controllers', [])
         backgroundGeoLocation.configure(scan, scanError, {
             desiredAccuracy: 0,
             stationaryRadius: 1,
-            distanceFilter: 1,
-            debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+            distanceFilter: 5,
+            debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
             stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
             locationService: backgroundGeoLocation.service.ANDROID_FUSED_LOCATION,
-            //locationTimeout: 10000
-            interval: 1000,
-            fastestInterval: 1000,
-            activitiesInterval: 1000
+            interval: 10000,
+            fastestInterval: 5000,
+            activitiesInterval: 10000
         });
 
         backgroundGeoLocation.start();

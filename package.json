@@ -17,7 +17,8 @@
   "cordovaPlugins": [
     "wifiwizard",
     "cordova-plugin-whitelist",
-    "cordova-plugin-mauron85-background-geolocation"
+    "cordova-plugin-mauron85-background-geolocation",
+    "cordova-plugin-device"
   ],
   "cordovaPlatforms": [
     {
