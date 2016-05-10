@@ -42,11 +42,9 @@ angular.module('starter.controllers', [])
 })
 
 .controller('NetworksCtrl', function($scope, $timeout, $ionicPlatform, $http, $ionicPopup, API) {
-    $scope.enableScanning = true;
+    $scope.enableScanning = localStorage.getItem('enableScanning') === "true";
 
     $ionicPlatform.ready(function() {
-        //var backgroundGeoLocation = plugins.backgroundGeoLocation;
-
         var scan = function(location) {
             /*$scope.$apply(function () {
                 $scope.networks = [{SSID: location, level: 0}];
@@ -87,36 +85,23 @@ angular.module('starter.controllers', [])
             activitiesInterval: 10000
         });
 
-        backgroundGeoLocation.start();
+        $scope.handleScanningSetting = function(enable) {
+            if (enable) {
+                backgroundGeoLocation.start();
+            } else {
+                backgroundGeoLocation.stop();
+                $scope.networks = [];
+            }
 
-        /*$scope.$apply(function() {
-            $scope.enableScanning = true;
-        });*/
+            console.log(enable);
+        };
 
-        /*$scope.enable = function() {
-            $ionicPopup.alert({
-             title: 'Scanning Status',
-             template: $scope.enableScanning ? "true" : "false"
-           });
-       };*/
-
-       /*$scope.$apply(function() {
-           $scope.enableScanning = true;
-       });*/
+        $scope.handleScanningSetting($scope.enableScanning);
 
        $scope.toggleScanning = function() {
-           console.log($scope.enableScanning);
            $scope.enableScanning = !$scope.enableScanning;
+           localStorage.setItem('enableScanning', $scope.enableScanning);
+           $scope.handleScanningSetting($scope.enableScanning);
        };
-
-       $scope.$watch('enableScanning', function(newValue, oldValue) {
-           if (newValue) {
-               backgroundGeoLocation.start();
-           } else {
-               backgroundGeoLocation.stop();
-               $scope.networks = [];
-           }
-       });
-
     });
 });
