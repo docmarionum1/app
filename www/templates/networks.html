@@ -1,9 +1,10 @@
 <ion-view view-title="Wifi Networks">
-  <ion-content>
-    <ion-list>
-      <ion-item ng-repeat="network in networks">
-        {{network.SSID}} ({{network.level}})
-      </ion-item>
-    </ion-list>
-  </ion-content>
+    <ion-content>
+        <ion-list>
+            <ion-toggle ng-model="enableScanning" toggle-class="toggle-assertive" ng-change="toggleScanning();">Enable Scanning</ion-toggle>
+            <ion-item ng-repeat="network in networks">
+                {{network.SSID}} ({{network.level}})
+            </ion-item>
+        </ion-list>
+    </ion-content>
 </ion-view>

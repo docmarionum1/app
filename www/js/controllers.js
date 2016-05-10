@@ -41,7 +41,9 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('NetworksCtrl', function($scope, $timeout, $ionicPlatform, $http, API) {
+.controller('NetworksCtrl', function($scope, $timeout, $ionicPlatform, $http, $ionicPopup, API) {
+    $scope.enableScanning = true;
+
     $ionicPlatform.ready(function() {
         //var backgroundGeoLocation = plugins.backgroundGeoLocation;
 
@@ -69,23 +71,52 @@ angular.module('starter.controllers', [])
 
         var scanError = function(error) {
             $scope.$apply(function () {
-                $scope.networks = [{SSID: error, level: 0}]
+                $scope.networks = [{SSID: error, level: 0}];
             });
         }
 
         backgroundGeoLocation.configure(scan, scanError, {
-            desiredAccuracy: 0,
-            stationaryRadius: 1,
+            desiredAccuracy: 10,
+            stationaryRadius: 5,
             distanceFilter: 5,
             debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
             stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
             locationService: backgroundGeoLocation.service.ANDROID_FUSED_LOCATION,
             interval: 10000,
-            fastestInterval: 5000,
+            fastestInterval: 2000,
             activitiesInterval: 10000
         });
 
         backgroundGeoLocation.start();
+
+        /*$scope.$apply(function() {
+            $scope.enableScanning = true;
+        });*/
+
+        /*$scope.enable = function() {
+            $ionicPopup.alert({
+             title: 'Scanning Status',
+             template: $scope.enableScanning ? "true" : "false"
+           });
+       };*/
+
+       /*$scope.$apply(function() {
+           $scope.enableScanning = true;
+       });*/
+
+       $scope.toggleScanning = function() {
+           console.log($scope.enableScanning);
+           $scope.enableScanning = !$scope.enableScanning;
+       };
+
+       $scope.$watch('enableScanning', function(newValue, oldValue) {
+           if (newValue) {
+               backgroundGeoLocation.start();
+           } else {
+               backgroundGeoLocation.stop();
+               $scope.networks = [];
+           }
+       });
 
     });
 });
