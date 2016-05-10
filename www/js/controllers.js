@@ -104,4 +104,6 @@ angular.module('starter.controllers', [])
            $scope.handleScanningSetting($scope.enableScanning);
        };
     });
-});
+})
+
+.controller('AboutCtrl', function() {});
