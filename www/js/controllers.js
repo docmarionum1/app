@@ -41,22 +41,72 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('NetworksCtrl', function($scope, $timeout, $ionicPlatform, $http, $ionicPopup, API) {
+.controller('NetworksCtrl', function($scope, $timeout, $ionicPlatform, $http, $ionicPopup, API, localStorageService) {
     $scope.enableScanning = localStorage.getItem('enableScanning') === "true";
+
+    $scope.tryUpload = function() {
+        // If we have a network connection and at least 10 scan results
+        var keys = localStorageService.keys();
+        var online = navigator.connection.type !== Connection.NONE;
+        if (online && keys.length >= 10) {
+            var scans = {scans: []};
+
+            for (var i = 0; i < keys.length; i++) {
+                scans.scans.push(localStorageService.get(keys[i]));
+            }
+
+            // Try posting scans
+            $http.post(API.url, scans).then(function() {
+                // If successful remove scans from storage
+                for (var i = 0; i < keys.length; i++) {
+                    localStorageService.remove(keys[i]);
+                }
+            }, function(res) {
+                $scope.networks.push({SSID: res, level:0});
+            });
+        }
+    };
 
     $ionicPlatform.ready(function() {
         var scan = function(location) {
-            /*$scope.$apply(function () {
-                $scope.networks = [{SSID: location, level: 0}];
-            });*/
-
             WifiWizard.getScanResults(function(results) {
-                $scope.$apply(function () {
-                    $scope.networks = results;
-                });
+                // Convert results format for API
+                var readings = [];
+                for (var i = 0; i < results.length; i++) {
+                    readings.push({
+                        level: results[i].level,
+                        BSSID: results[i].BSSID,
+                        SSID: results[i].SSID,
+                        caps: results[i].capabilities,
+                        freq: results[i].frequency
+                    });
+                }
 
-                $http.post(API.url, {location: location, networks: results, device: device}).then(function() {
-                    $scope.networks.push({SSID: location, level: 0})
+                // Create scanResults object for API
+                var scanResults = {
+                    device_model: device.model,
+                    droid_version: device.version,
+                    app_version: "0.0",
+                    device_mac: device.uuid,
+
+                    time: location.time,
+
+                    altitude: location.altitude,
+                    lat: location.latitude,
+                    lng: location.longitude,
+                    acc: location.accuracy,
+
+                    readings: readings
+                };
+
+                // Save scanResults for bulk upload later
+                localStorageService.set(location.time, scanResults);
+
+                // Attempt to upload if conditions are right
+                $scope.$apply(function () {
+                    $scope.tryUpload();
+
+                    $scope.networks = results;
                 });
             }, function(results) {
                 $scope.$apply(function () {
@@ -93,16 +143,16 @@ angular.module('starter.controllers', [])
                 $scope.networks = [];
             }
 
-            console.log(enable);
+            //plugins.toast.show('toggle', 'long', 'bottom');
         };
 
         $scope.handleScanningSetting($scope.enableScanning);
 
-       $scope.toggleScanning = function() {
-           $scope.enableScanning = !$scope.enableScanning;
-           localStorage.setItem('enableScanning', $scope.enableScanning);
-           $scope.handleScanningSetting($scope.enableScanning);
-       };
+        $scope.toggleScanning = function() {
+            $scope.enableScanning = !$scope.enableScanning;
+            localStorage.setItem('enableScanning', $scope.enableScanning);
+            $scope.handleScanningSetting($scope.enableScanning);
+        };
     });
 })
 
