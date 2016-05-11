@@ -86,7 +86,7 @@ angular.module('starter.controllers', [])
                 var scanResults = {
                     device_model: device.model,
                     droid_version: device.version,
-                    app_version: "0.0",
+                    app_version: $scope.APPLICATION_VERSION,
                     device_mac: device.uuid,
 
                     time: location.time,

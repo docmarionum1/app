@@ -6,8 +6,11 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'LocalStorageModule'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope) {
     $ionicPlatform.ready(function() {
+        cordova.getAppVersion.getVersionNumber().then(function (version) {
+            $rootScope.APPLICATION_VERSION = version;
+        });
     });
 })
 
@@ -42,6 +45,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'LocalStorageModule']
     $urlRouterProvider.otherwise('/app/networks');
 
     localStorageServiceProvider.setPrefix('wifiscanning');
+
+
 })
 
 .constant('API', {
