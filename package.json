@@ -18,7 +18,13 @@
     "wifiwizard",
     "cordova-plugin-whitelist",
     "cordova-plugin-mauron85-background-geolocation",
-    "cordova-plugin-device"
+    "cordova-plugin-device",
+    "cordova-plugin-network-information",
+    {
+      "locator": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git",
+      "id": "cordova-plugin-x-toast"
+    },
+    "cordova-plugin-app-version"
   ],
   "cordovaPlatforms": [
     {

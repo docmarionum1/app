@@ -4,14 +4,17 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 'starter.controllers', 'LocalStorageModule'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope) {
     $ionicPlatform.ready(function() {
+        cordova.getAppVersion.getVersionNumber().then(function (version) {
+            $rootScope.APPLICATION_VERSION = version;
+        });
     });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, localStorageServiceProvider) {
     $stateProvider
     .state('app', {
         url: '/app',
@@ -27,12 +30,25 @@ angular.module('starter', ['ionic', 'starter.controllers'])
                 controller: 'NetworksCtrl'
             }
         }
+    })
+    .state('app.about', {
+        url: '/about',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/about.html',
+                controller: 'AboutCtrl'
+            }
+        }
     });
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/networks');
+
+    localStorageServiceProvider.setPrefix('wifiscanning');
+
+
 })
 
 .constant('API', {
-  url: 'http://jeremyneiman.com:8765/api'
+  url: 'http://capstone.cloudapp.net/ingestion/'
 });
