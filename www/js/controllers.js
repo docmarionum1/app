@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['Logging'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
 
@@ -41,35 +41,53 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('NetworksCtrl', function($scope, $timeout, $ionicPlatform, $http, $ionicPopup, API, localStorageService) {
+.controller('NetworksCtrl', function(
+    $scope, $timeout, $http,
+    $ionicPlatform, $ionicPopup,
+    API, localStorageService, logger
+) {
+    logger.log('Starting Networks Controller');
+
     $scope.enableScanning = localStorage.getItem('enableScanning') === "true";
 
+    logger.log('enableScanning=' + $scope.enableScanning)
+
     $scope.tryUpload = function() {
+        logger.log('tryupload');
         // If we have a network connection and at least 10 scan results
         var keys = localStorageService.keys();
         var online = navigator.connection.type !== Connection.NONE;
         if (online && keys.length >= 10) {
+            logger.log('Commencing upload');
             var scans = {scans: []};
 
             for (var i = 0; i < keys.length; i++) {
                 scans.scans.push(localStorageService.get(keys[i]));
             }
+            logger.log('Uploading ' + scans.scans.length + ' scans.');
 
             // Try posting scans
             $http.post(API.url, scans).then(function() {
+                logger.log('Upload success!');
                 // If successful remove scans from storage
                 for (var i = 0; i < keys.length; i++) {
                     localStorageService.remove(keys[i]);
                 }
             }, function(res) {
+                logger.log('upload failed :(');
                 $scope.networks.push({SSID: res, level:0});
             });
         }
     };
 
     $ionicPlatform.ready(function() {
+        logger.log('ionic ready');
         var scan = function(location) {
+            logger.log('Location Update Triggered!  About to scan wifi!');
+            logger.log('lat=' + location.latitude + ' lon=' + location.longitude);
             WifiWizard.getScanResults(function(results) {
+                logger.log('Wifi results:')
+                logger.log(results.length + ' networks found');
                 // Convert results format for API
                 var readings = [];
                 for (var i = 0; i < results.length; i++) {
@@ -100,6 +118,7 @@ angular.module('starter.controllers', [])
                 };
 
                 // Save scanResults for bulk upload later
+                logger.log('saving results');
                 localStorageService.set(location.time, scanResults);
 
                 // Attempt to upload if conditions are right
@@ -118,9 +137,7 @@ angular.module('starter.controllers', [])
         };
 
         var scanError = function(error) {
-            $scope.$apply(function () {
-                $scope.networks = [{SSID: error, level: 0}];
-            });
+            logger.log('Scan Error!');
         }
 
         backgroundGeoLocation.configure(scan, scanError, {
@@ -136,19 +153,23 @@ angular.module('starter.controllers', [])
         });
 
         $scope.handleScanningSetting = function(enable) {
+            logger.log('handleScanningSetting');
             if (enable) {
+                logger.log('Enable Scanning');
                 backgroundGeoLocation.start();
             } else {
+                logger.log('Disable Scanning');
                 backgroundGeoLocation.stop();
                 $scope.networks = [];
             }
 
-            //plugins.toast.show('toggle', 'long', 'bottom');
         };
 
+        logger.log('About to check Scanning Setting');
         $scope.handleScanningSetting($scope.enableScanning);
 
         $scope.toggleScanning = function() {
+            logger.log('Toggle Scanning');
             $scope.enableScanning = !$scope.enableScanning;
             localStorage.setItem('enableScanning', $scope.enableScanning);
             $scope.handleScanningSetting($scope.enableScanning);
@@ -156,4 +177,8 @@ angular.module('starter.controllers', [])
     });
 })
 
-.controller('AboutCtrl', function() {});
+.controller('AboutCtrl', function() {})
+.controller('LogCtrl', function($scope, logger) {
+    logger.registerLogScope($scope);
+    $scope.logger = logger;
+})
