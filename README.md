@@ -6,6 +6,11 @@ Run to setup platforms and plugins:
 
     ionic state restore
 
+Run a local development server (NOTE: none of the native functionality will
+work when just running it as a web server.  Needs to be built.):
+
+    phonegap serve
+
 Build app with:
 
     phonegap remote build android
