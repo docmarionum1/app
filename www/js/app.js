@@ -54,6 +54,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'LocalStorageModule',
             }
         }
     })
+    .state('app.map', {
+        url: '/map',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/map.html',
+                controller: 'MapCtrl'
+            }
+        }
+    })
     .state('app.about', {
         url: '/about',
         views: {

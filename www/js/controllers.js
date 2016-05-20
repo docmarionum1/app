@@ -178,6 +178,7 @@ angular.module('starter.controllers', ['Logging'])
 })
 
 .controller('AboutCtrl', function() {})
+.controller('MapCtrl', function() {})
 .controller('LogCtrl', function($scope, logger) {
     logger.registerLogScope($scope);
     $scope.logger = logger;
