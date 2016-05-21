@@ -144,12 +144,10 @@ angular.module('starter.controllers', ['Logging'])
             desiredAccuracy: 10,
             stationaryRadius: 5,
             distanceFilter: 5,
+            locationTimeout: 1,
             debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
             stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
-            locationService: backgroundGeoLocation.service.ANDROID_FUSED_LOCATION,
-            interval: 10000,
-            fastestInterval: 2000,
-            activitiesInterval: 10000
+            locationService: backgroundGeoLocation.service.ANDROID_DISTANCE_FILTER
         });
 
         $scope.handleScanningSetting = function(enable) {
@@ -182,4 +180,4 @@ angular.module('starter.controllers', ['Logging'])
 .controller('LogCtrl', function($scope, logger) {
     logger.registerLogScope($scope);
     $scope.logger = logger;
-})
+});
