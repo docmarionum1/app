@@ -1,3 +1,3 @@
 <ion-view view-title="Log">
-        <textarea readonly style="width:100%; height: 100%; margin-top: 15%">{{logger._log}}</textarea>
+        <div style="width:100%; height: 100%; margin-top: 15%; overflow-y: scroll" ng-bind-html="logger._log"></div>
 </ion-view>
