@@ -76,6 +76,15 @@ angular.module('app', ['ionic', 'controllers', 'LocalStorageModule', 'Logging'])
             }
         }
     })
+    .state('app.settings', {
+        url: '/settings',
+        views: {
+            'menuContent': {
+                templateUrl: 'views/settings/settings.html',
+                controller: 'AboutCtrl'
+            }
+        }
+    })
     .state('app.log', {
         url: '/log',
         views: {
