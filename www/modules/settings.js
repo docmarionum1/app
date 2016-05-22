@@ -3,6 +3,10 @@ var settings = {
     'enableScanning': {
         type: 'boolean',
         default: true
+    },
+    'uploadMacAddress': {
+        type: 'boolean',
+        default: false
     }
 };
 

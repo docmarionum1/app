@@ -61,7 +61,7 @@ angular.module('controllers')
                     device_model: device.model,
                     droid_version: device.version,
                     app_version: $scope.APPLICATION_VERSION,
-                    device_mac: device.uuid,
+                    device_mac: $scope.settings.uploadMacAddress ? device.uuid : "",
 
                     time: location.time,
 
