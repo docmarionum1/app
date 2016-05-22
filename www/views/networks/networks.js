@@ -6,9 +6,7 @@ angular.module('controllers')
 ) {
     logger.log('Starting Networks Controller');
 
-    $scope.enableScanning = localStorage.getItem('enableScanning') === "true";
-
-    logger.log('enableScanning=' + $scope.enableScanning)
+    logger.log('enableScanning=' + $scope.settings.enableScanning);
 
     $scope.tryUpload = function() {
         logger.log('tryupload');
@@ -121,14 +119,9 @@ angular.module('controllers')
 
         };
 
-        logger.log('About to check Scanning Setting');
-        $scope.handleScanningSetting($scope.enableScanning);
-
-        $scope.toggleScanning = function() {
-            logger.log('Toggle Scanning');
-            $scope.enableScanning = !$scope.enableScanning;
-            localStorage.setItem('enableScanning', $scope.enableScanning);
-            $scope.handleScanningSetting($scope.enableScanning);
-        };
+        $scope.$watch(
+            'settings.enableScanning',
+            $scope.handleScanningSetting
+        );
     });
 });
