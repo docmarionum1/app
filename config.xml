@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.ionicframework.app359788" version="0.1.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>wifi-mapping-app</name>
+  <name>WiFind</name>
   <description>
-        An Ionic Framework and Cordova project.
+        An app that maps the locations of WiFi access points.
     </description>
   <author email="you@example.com" href="http://example.com.com/">
       Your Name Here

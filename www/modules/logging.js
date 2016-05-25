@@ -2,7 +2,7 @@
     Create a logging module that will expose a log function and allow for the
     log to be visible in the DOM.
  */
-angular.module('Logging', [])
+angular.module('WiFind.Logging', [])
 .factory('logger', function() {
     return {
         _log: "",

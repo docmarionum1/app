@@ -1,4 +1,4 @@
-angular.module('controllers')
+angular.module('WiFind.controllers')
 .controller('NetworksCtrl', function(
     $scope, $timeout, $http,
     $ionicPlatform, $ionicPopup,

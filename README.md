@@ -1,17 +1,21 @@
+# WiFind
+
+An app that collects WiFi data.
+
 [![Stories in Ready](https://badge.waffle.io/wifimapping/app.png?label=ready&title=Ready)](http://waffle.io/wifimapping/app)
 
 # Setup
 
 1. Install [Nodejs](nodejs.org)
-* Install phonegap, cordova, ionic and bower globally
+2. Install phonegap, cordova, ionic and bower globally
 
       npm install -g phonegap cordova ionic bower
 
-* Setup the app's platforms and plugins:
+3. Setup the app's platforms and plugins:
 
       ionic state restore
 
-* Install bower packages:
+4. Install bower packages:
 
       bower install
 
