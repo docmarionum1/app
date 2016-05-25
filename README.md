@@ -1,16 +1,28 @@
 [![Stories in Ready](https://badge.waffle.io/wifimapping/app.png?label=ready&title=Ready)](http://waffle.io/wifimapping/app)
 
-Install Nodejs/Phonegap/Cordova/Ionic globally
+# Setup
 
-Run to setup platforms and plugins:
+1. Install [Nodejs](nodejs.org)
+* Install phonegap, cordova, ionic and bower globally
 
-    ionic state restore
+      npm install -g phonegap cordova ionic bower
 
-Run a local development server (NOTE: none of the native functionality will
-work when just running it as a web server.  Needs to be built.):
+* Setup the app's platforms and plugins:
+
+      ionic state restore
+
+* Install bower packages:
+
+      bower install
+
+# Testing
+
+Test the app locally with:
 
     phonegap serve
 
-Build app with:
+None of the native phone features will work, but the app should load in a browser and not have javascript errors.
+
+To test it on a phone you can build an APK and then install it. Build it with:
 
     phonegap remote build android
