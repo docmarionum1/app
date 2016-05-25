@@ -4,15 +4,13 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'LocalStorageModule', 'Logging'])
+angular.module('app', ['ionic', 'controllers', 'LocalStorageModule', 'Logging'])
+
+.constant('API', {
+  url: 'http://capstone.cloudapp.net/ingestion/'
+})
 
 .run(function($ionicPlatform, $rootScope, logger) {
-    $ionicPlatform.ready(function() {
-        cordova.getAppVersion.getVersionNumber().then(function (version) {
-            $rootScope.APPLICATION_VERSION = version;
-        });
-    });
-
     //Add in-app logger to console.log
     var previousConsole = window.console || {};
     window.console = {
@@ -34,7 +32,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'LocalStorageModule',
                 logger.log(msg);
             }
         }
-    }
+    };
+
+    $ionicPlatform.ready(function() {
+        cordova.getAppVersion.getVersionNumber().then(function (version) {
+            $rootScope.APPLICATION_VERSION = version;
+        });
+    });
 })
 
 .config(function($stateProvider, $urlRouterProvider, localStorageServiceProvider) {
@@ -42,14 +46,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'LocalStorageModule',
     .state('app', {
         url: '/app',
         abstract: true,
-        templateUrl: 'templates/menu.html',
+        templateUrl: 'views/menu/menu.html',
         controller: 'AppCtrl'
     })
     .state('app.networks', {
         url: '/networks',
         views: {
             'menuContent': {
-                templateUrl: 'templates/networks.html',
+                templateUrl: 'views/networks/networks.html',
                 controller: 'NetworksCtrl'
             }
         }
@@ -58,7 +62,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'LocalStorageModule',
         url: '/map',
         views: {
             'menuContent': {
-                templateUrl: 'templates/map.html',
+                templateUrl: 'views/map/map.html',
                 controller: 'MapCtrl'
             }
         }
@@ -67,7 +71,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'LocalStorageModule',
         url: '/about',
         views: {
             'menuContent': {
-                templateUrl: 'templates/about.html',
+                templateUrl: 'views/about/about.html',
+                controller: 'AboutCtrl'
+            }
+        }
+    })
+    .state('app.settings', {
+        url: '/settings',
+        views: {
+            'menuContent': {
+                templateUrl: 'views/settings/settings.html',
                 controller: 'AboutCtrl'
             }
         }
@@ -76,7 +89,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'LocalStorageModule',
         url: '/log',
         views: {
             'menuContent': {
-                templateUrl: 'templates/log.html',
+                templateUrl: 'views/log/log.html',
                 controller: 'LogCtrl'
             }
         }
@@ -86,10 +99,4 @@ angular.module('starter', ['ionic', 'starter.controllers', 'LocalStorageModule',
     $urlRouterProvider.otherwise('/app/networks');
 
     localStorageServiceProvider.setPrefix('wifiscanning');
-
-
-})
-
-.constant('API', {
-  url: 'http://capstone.cloudapp.net/ingestion/'
 });
