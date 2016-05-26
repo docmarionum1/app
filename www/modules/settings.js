@@ -7,11 +7,15 @@ var settings = {
     'uploadMacAddress': {
         type: 'boolean',
         default: false
+    },
+    'debug': {
+        type: 'boolean',
+        default: false
     }
 };
 
 angular.module('WiFind.app')
-.run(function($rootScope) {
+.run(function($rootScope, logger) {
     $rootScope.settings = {};
 
     for (var key in settings) {
@@ -27,6 +31,7 @@ angular.module('WiFind.app')
         (function(key) {
           $rootScope.$watch('settings.' + key, function() {
               localStorage.setItem('WiFind.'+key, $rootScope.settings[key]);
+              logger.log(key + '=' + $rootScope.settings[key]);
           });
         })(key);
     }
