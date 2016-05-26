@@ -20,7 +20,8 @@
     "cordova-plugin-mauron85-background-geolocation",
     "cordova-plugin-device",
     "cordova-plugin-network-information",
-    "cordova-plugin-app-version"
+    "cordova-plugin-app-version",
+    "org.apache.cordova.splashscreen"
   ],
   "cordovaPlatforms": [
     {
