@@ -7,15 +7,19 @@ var settings = {
     'uploadMacAddress': {
         type: 'boolean',
         default: false
+    },
+    'debug': {
+        type: 'boolean',
+        default: false
     }
 };
 
-angular.module('app')
-.run(function($rootScope) {
+angular.module('WiFind.app')
+.run(function($rootScope, logger) {
     $rootScope.settings = {};
 
     for (var key in settings) {
-        var value = localStorage.getItem(key);
+        var value = localStorage.getItem('WiFind.'+key);
         if (settings[key]['type'] === 'boolean' && value !== undefined) {
             value = value === "true";
         } else {
@@ -24,8 +28,11 @@ angular.module('app')
 
         $rootScope.settings[key] = value;
 
-        $rootScope.$watch('settings.' + key, function() {
-            localStorage.setItem(key, $rootScope.settings[key]);
-        });
+        (function(key) {
+          $rootScope.$watch('settings.' + key, function() {
+              localStorage.setItem('WiFind.'+key, $rootScope.settings[key]);
+              logger.log(key + '=' + $rootScope.settings[key]);
+          });
+        })(key);
     }
 });

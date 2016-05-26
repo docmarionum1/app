@@ -1,4 +1,4 @@
-angular.module('controllers')
+angular.module('WiFind.controllers')
 .controller('NetworksCtrl', function(
     $scope, $timeout, $http,
     $ionicPlatform, $ionicPopup,
@@ -46,15 +46,27 @@ angular.module('controllers')
                 logger.log(results.length + ' networks found');
                 // Convert results format for API
                 var readings = [];
-                for (var i = 0; i < results.length; i++) {
+
+                if (results.length === 0) {
+                    // If there were no wifi results, add a dummy result
+                    logger.log('Egad! No wifi scan results!');
                     readings.push({
-                        level: results[i].level,
-                        BSSID: results[i].BSSID,
-                        SSID: results[i].SSID,
-                        caps: results[i].capabilities,
-                        freq: results[i].frequency
+                        BSSID: "",
+                        SSID: "",
+                        caps: ""
                     });
+                } else {
+                    for (var i = 0; i < results.length; i++) {
+                        readings.push({
+                            level: results[i].level,
+                            BSSID: results[i].BSSID,
+                            SSID: results[i].SSID,
+                            caps: results[i].capabilities,
+                            freq: results[i].frequency
+                        });
+                    }
                 }
+
 
                 // Create scanResults object for API
                 var scanResults = {
