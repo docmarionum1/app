@@ -4,9 +4,9 @@ angular.module('WiFind.controllers')
     $ionicPlatform, $ionicPopup,
     API, localStorageService, logger
 ) {
-    logger.log('Starting Networks Controller');
+    /*logger.log('Starting Networks Controller');
 
-    logger.log('enableScanning=' + $scope.settings.enableScanning);
+    logger.log('enableScanning=' + $scope.settings.enableScanning);*/
 
     $scope.tryUpload = function() {
         logger.log('tryupload');

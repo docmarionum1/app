@@ -9,7 +9,7 @@ angular.module('WiFind.Logging', [])
         _scope: null,
 
         log: function(message) {
-            if ($rootScope.settings.debug) {
+            if ($rootScope.settings && $rootScope.settings.debug) {
                 this._log += message + "<br/>";
 
                 if (this._scope && !this._scope.$$phase) {

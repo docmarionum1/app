@@ -3,10 +3,10 @@
   <name>WiFind</name>
   <description>
         An app that maps the locations of WiFi access points.
-    </description>
+  </description>
   <author email="you@example.com" href="http://example.com.com/">
       Your Name Here
-    </author>
+  </author>
   <content src="index.html"/>
   <access origin="*"/>
   <preference name="webviewbounce" value="false"/>
@@ -25,6 +25,7 @@
   <plugin name="cordova-plugin-device"/>
   <plugin name="cordova-plugin-network-information"/>
   <plugin name="cordova-plugin-app-version"/>
+  <plugin name="cordova-plugin-app-preferences"/>
 
   <plugin name="org.apache.cordova.splashscreen"/>
   <preference name="SplashScreen" value="screen"/>
@@ -43,11 +44,11 @@
   <splash platform="android" src="img/splash/drawable-port-hdpi-screen.png" qualifier="port-hdpi"/>
   <splash platform="android" src="img/splash/drawable-port-xhdpi-screen.png" qualifier="port-xhdpi"/>
   <splash platform="android" src="img/splash/drawable-port-xxhdpi-screen.png" qualifier="port-xxhdpi"/>
-  <splash platform="android" src="img/splash/drawable-port-xxxhdpi-screen.png" qualifier="port-xxxhdpi"/>
+  <splash platform="android" src="www/img/splash/drawable-port-xxxhdpi-screen.png" qualifier="port-xxxhdpi"/>
 
   <icon src="icon.png"/>
   <platform name="android">
-    <icon src="img/icon/icon_36_36_.png" qualifier="ldpi"/>
+    <icon src="www/img/icon/icon_36_36.png" qualifier="ldpi"/>
     <icon src="img/icon/icon_48_48.png" qualifier="mdpi"/>
     <icon src="img/icon/icon_72_72.png" qualifier="hdpi"/>
     <icon src="img/icon/icon_96_96.png" qualifier="xhdpi"/>

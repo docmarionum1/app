@@ -15,24 +15,24 @@ var settings = {
 };
 
 angular.module('WiFind.app')
-.run(function($rootScope, logger) {
-    $rootScope.settings = {};
+.run(function($ionicPlatform, $rootScope, logger) {
+    $ionicPlatform.ready(function() {
+        $rootScope.settings = {};
+        var prefs = plugins.appPreferences;
 
-    for (var key in settings) {
-        var value = localStorage.getItem('WiFind.'+key);
-        if (settings[key]['type'] === 'boolean' && value !== undefined) {
-            value = value === "true";
-        } else {
-            value = settings[key]['default'];
+        for (var key in settings) {
+            (function(key) {
+                prefs.fetch(key).then(function(value) {
+                    $rootScope.settings[key] = value;
+                }, function(error) {
+                    $rootScope.settings[key] = settings[key]['default'];
+                });
+
+                $rootScope.$watch('settings.' + key, function() {
+                    prefs.store(key, $rootScope.settings[key]);
+                    logger.log(key + '=' + $rootScope.settings[key]);
+                });
+            })(key);
         }
-
-        $rootScope.settings[key] = value;
-
-        (function(key) {
-          $rootScope.$watch('settings.' + key, function() {
-              localStorage.setItem('WiFind.'+key, $rootScope.settings[key]);
-              logger.log(key + '=' + $rootScope.settings[key]);
-          });
-        })(key);
-    }
+    });
 });
