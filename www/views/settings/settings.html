@@ -1,8 +1,14 @@
 <ion-view view-title="Settings">
     <ion-content>
         <ion-list>
-            <ion-toggle ng-model="settings.uploadMacAddress" toggle-class="toggle-assertive">Upload Device Mac Address</ion-toggle>
-            <ion-toggle ng-model="settings.debug" toggle-class="toggle-energized">Debugging Mode</ion-toggle>
+            <ion-toggle ng-model="settings.uploadMacAddress" toggle-class="toggle-assertive">
+                <div style="font-weight:bold">Upload Device Mac Address</div>
+                <div style="font-style:italic; white-space: normal;">Disable to keep all data you provide anonymous.  Disabling will prevent you from being able to access your historical activity.</div>
+            </ion-toggle>
+            <ion-toggle ng-model="settings.debug" toggle-class="toggle-energized">
+                <div style="font-weight:bold">Debugging Mode</div>
+                <div style="font-style:italic; white-space: normal;">Enable to view a log of program activity.</div>
+            </ion-toggle>
         </ion-list>
     </ion-content>
 </ion-view>
