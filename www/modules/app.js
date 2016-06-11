@@ -83,7 +83,7 @@ angular.module('WiFind.app', [
         views: {
             'menuContent': {
                 templateUrl: 'views/settings/settings.html',
-                controller: 'AboutCtrl'
+                controller: 'SettingsCtrl'
             }
         }
     })

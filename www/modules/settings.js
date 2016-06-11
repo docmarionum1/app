@@ -15,6 +15,10 @@ var settings = {
     'pollingIntensity': {
         type: 'select',
         default: 'medium'
+    },
+    'autostart': {
+        type: 'boolean',
+        default: false
     }
 };
 

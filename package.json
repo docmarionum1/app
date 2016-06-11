@@ -22,7 +22,8 @@
     "cordova-plugin-network-information",
     "cordova-plugin-app-version",
     "org.apache.cordova.splashscreen",
-    "cordova-plugin-app-preferences"
+    "cordova-plugin-app-preferences",
+    "cordova-plugin-autostart"
   ],
   "cordovaPlatforms": [
     {
