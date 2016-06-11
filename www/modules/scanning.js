@@ -136,7 +136,9 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         var conf = {
             debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
             stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
-            locationService: backgroundGeoLocation.service.ANDROID_DISTANCE_FILTER
+            locationService: backgroundGeoLocation.service.ANDROID_DISTANCE_FILTER,
+            notificationTitle: 'WiFind',
+            notificationText: 'Background location tracking is enabled.',
         };
 
         if (value === 'low') {
