@@ -1,10 +1,13 @@
-angular.module('WiFind.app', ['ionic', 'WiFind.controllers', 'LocalStorageModule', 'WiFind.Logging'])
+angular.module('WiFind.app', [
+    'ionic',
+    'WiFind.controllers', 'LocalStorageModule', 'WiFind.Logging', 'WiFind.Scanning'
+])
 
 .constant('API', {
   url: 'http://capstone.cloudapp.net/ingestion/'
 })
 
-.run(function($ionicPlatform, $rootScope, logger) {
+.run(function($ionicPlatform, $rootScope, logger, scanning) {
     //Add in-app logger to console.log
     var previousConsole = window.console || {};
     window.console = {
@@ -33,6 +36,11 @@ angular.module('WiFind.app', ['ionic', 'WiFind.controllers', 'LocalStorageModule
             $rootScope.APPLICATION_VERSION = version;
         });
     });
+
+    $rootScope.$watch(
+        'settings.pollingIntensity',
+        scanning.configureBackgroundGeoLocation
+    );
 })
 
 .config(function($stateProvider, $urlRouterProvider, localStorageServiceProvider) {

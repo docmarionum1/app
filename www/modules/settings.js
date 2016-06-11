@@ -11,6 +11,10 @@ var settings = {
     'debug': {
         type: 'boolean',
         default: false
+    },
+    'pollingIntensity': {
+        type: 'select',
+        default: 'medium'
     }
 };
 
@@ -23,7 +27,11 @@ angular.module('WiFind.app')
         for (var key in settings) {
             (function(key) {
                 prefs.fetch(key).then(function(value) {
-                    $rootScope.settings[key] = value;
+                    if (value === null) {
+                        $rootScope.settings[key] = settings[key]['default'];
+                    } else {
+                        $rootScope.settings[key] = value;
+                    }
                 }, function(error) {
                     $rootScope.settings[key] = settings[key]['default'];
                 });

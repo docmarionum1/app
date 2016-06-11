@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.app359788" version="0.2.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.ionicframework.app359788" version="0.2.0"
+    xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android"
+>
   <name>WiFind</name>
   <description>
         An app that maps the locations of WiFi access points.
@@ -15,6 +17,10 @@
   <preference name="android-minSdkVersion" value="16"/>
   <preference name="BackupWebStorage" value="none"/>
   <preference name="android-build-tool" value="gradle"/>
+  <preference name="keepRunning" value="true"/>
+  <config-file platform="android" parent="/manifest/application">
+    <activity android:launchMode="singleInstance" />
+  </config-file>
 
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
@@ -29,7 +35,7 @@
 
   <plugin name="org.apache.cordova.splashscreen"/>
   <preference name="SplashScreen" value="screen"/>
-  <preference name="SplashScreenDelay" value="2000"/>
+  <preference name="SplashScreenDelay" value="5000"/>
   <preference name="FadeSplashScreen" value="false"/>
   <preference name="ShowSplashScreenSpinner" value="false"/>
   <splash src="splash.png" />
