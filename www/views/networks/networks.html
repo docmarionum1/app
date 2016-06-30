@@ -1,9 +1,21 @@
-<ion-view view-title="Wifi Networks">
+<ion-view view-title="">
     <ion-content>
-        <ion-list>
-            <ion-toggle ng-model="settings.enableScanning" toggle-class="toggle-assertive">Enable Scanning</ion-toggle>
-            <ion-item ng-repeat="network in networks">
+        <ion-list class="main-page-list">
+            <ion-toggle ng-model="settings.enableScanning" toggle-class="toggle-assertive" class="enable-scanning">Enable Scanning</ion-toggle>
+            <!--<ion-item ng-repeat="network in networks">
                 {{network.SSID}} ({{network.level}})
+            </ion-item>-->
+            <ion-item style="background-color:#529ed5">
+              <div>00 Total Access Points Scanned</div>
+            </ion-item>
+            <ion-item style="background-color:#4b79af">
+              00 Current Access Points
+            </ion-item>
+            <ion-item style="background-color:#464f95">
+              00 Access Points Today
+            </ion-item>
+            <ion-item style="background-color:#413d71">
+              00 Access Points This Week
             </ion-item>
         </ion-list>
     </ion-content>

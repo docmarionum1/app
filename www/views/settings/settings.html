@@ -1,20 +1,20 @@
-<ion-view view-title="Settings">
+<ion-view view-title="Settings" class="settings">
     <ion-content>
         <ion-list>
-            <ion-toggle ng-model="settings.uploadMacAddress" toggle-class="toggle-assertive">
+            <ion-toggle ng-model="settings.uploadMacAddress" toggle-class="toggle-assertive" class="menu-item-a">
                 <div style="font-weight:bold">Upload Device Mac Address</div>
-                <div style="font-style:italic; white-space: normal;">Disable to keep all data you provide anonymous.  Disabling will prevent you from being able to access your historical activity.</div>
+                <div class="setting-info">Disable to keep all data you provide anonymous.  Disabling will prevent you from being able to access your historical activity.</div>
             </ion-toggle>
-            <ion-toggle ng-model="settings.autostart" toggle-class="toggle-calm">
+            <ion-toggle ng-model="settings.autostart" toggle-class="toggle-calm" class="menu-item-b">
                 <div style="font-weight:bold">Start WiFind at Boot</div>
-                <div style="font-style:italic; white-space: normal;">Enable to automatically start WiFind when your phone is turned on.</div>
+                <div class="setting-info">Enable to automatically start WiFind when your phone is turned on.</div>
             </ion-toggle>
-            <label class="item item-input item-select">
-                <div style="padding-right:99px;">
-                    <div class="input-label" style="max-width:none; width:inherit">
-                        <div style="font-weight:bold">Polling Intensity</div>
+            <label class="item item-input item-select menu-item-a">
+                <div style="padding-right:35vw;">
+                    <div class="input-label" style="max-width:none; width:inherit; padding-bottom:0px;">
+                        <div style="font-weight:bold; padding-bottom:0px;">Polling Intensity</div>
                     </div>
-                    <div style="font-style:italic; white-space:normal; font-weight:normal">How frequently to poll for WIFI.  The higher the more data you will collect, but also the higher the battery usage.</div>
+                    <div class="setting-info">How frequently to poll for WIFI.  The higher the more data you will collect, but also the higher the battery usage.</div>
                 </div>
                 <select ng-model="settings.pollingIntensity">
                     <option value="low">Low</ion-option>
@@ -22,9 +22,9 @@
                     <option value="high">High</ion-option>
                 </select>
             </label>
-            <ion-toggle ng-model="settings.debug" toggle-class="toggle-energized">
+            <ion-toggle ng-model="settings.debug" toggle-class="toggle-energized" class="menu-item-b">
                 <div style="font-weight:bold">Debugging Mode</div>
-                <div style="font-style:italic; white-space: normal;">Enable to view a log of program activity.</div>
+                <div class="setting-info">Enable to view a log of program activity.</div>
             </ion-toggle>
         </ion-list>
     </ion-content>

@@ -5,7 +5,7 @@
       </ion-nav-back-button>
 
       <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        <button class="button button-icon button-clear wifind-navicon" menu-toggle="left">
         </button>
       </ion-nav-buttons>
     </ion-nav-bar>
@@ -14,26 +14,26 @@
 
   <ion-side-menu side="left">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">Menu</h1>
+      <h1 class="title" style="padding:5px;"><div class="wifind-icon"></div></h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close ng-click="login()">
+        <!--<ion-item menu-close ng-click="login()">
           Login
+        </ion-item>-->
+        <ion-item menu-close href="#/app/networks" class='menu-item-a'>
+          Home
         </ion-item>
-        <ion-item menu-close href="#/app/networks">
-          Wifi Networks
-        </ion-item>
-        <ion-item menu-close href="#/app/map">
+        <!--<ion-item menu-close href="#/app/map">
           Map
-        </ion-item>
-        <ion-item menu-close href="#/app/settings">
+        </ion-item>-->
+        <ion-item menu-close href="#/app/settings" class='menu-item-b'>
           Settings
         </ion-item>
-        <ion-item menu-close href="#/app/about">
+        <ion-item menu-close href="#/app/about" class='menu-item-a'>
           About
         </ion-item>
-        <ion-item menu-close href="#/app/log">
+        <ion-item menu-close href="#/app/log" class='menu-item-b'>
           Log
         </ion-item>
       </ion-list>

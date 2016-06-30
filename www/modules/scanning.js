@@ -6,7 +6,6 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
     var configured = false;
     var currentlyScanning = false;
     var timeout = 0;
-    var
 
     var tryUpload = function() {
         logger.log('tryupload function');
