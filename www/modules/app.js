@@ -4,7 +4,7 @@ angular.module('WiFind.app', [
 ])
 
 .constant('API', {
-  url: 'http://capstone.cloudapp.net/ingestion/'
+  url: 'http://wifindproject.com/ingestion/'
 })
 
 .run(function($ionicPlatform, $rootScope, logger, scanning) {
