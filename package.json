@@ -23,7 +23,8 @@
     "cordova-plugin-app-version",
     "org.apache.cordova.splashscreen",
     "cordova-plugin-app-preferences",
-    "cordova-plugin-autostart"
+    "cordova-plugin-autostart",
+    "cordova-plugin-local-notifications"
   ],
   "cordovaPlatforms": [
     {

@@ -5,13 +5,15 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
 ) {
     var configured = false;
     var currentlyScanning = false;
+    var timeout = 0;
+    var
 
     var tryUpload = function() {
         logger.log('tryupload function');
         // If we have a network connection and at least 10 scan results
         var keys = localStorageService.keys();
         var online = navigator.connection.type !== Connection.NONE;
-        if (online && keys.length >= 10) {
+        if (online && keys.length >= 10 && --timeout < 0) {
             logger.log('Commencing upload');
             var scans = {scans: []};
 
@@ -29,6 +31,9 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
                 }
             }, function(res) {
                 logger.log('upload failed :(');
+
+                // If upload fails, don't try uploading for a bit
+                timeout = 60;
             });
         }
     };
@@ -36,7 +41,29 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
     var scan = function(location) {
         logger.log('Location Update Triggered!  About to scan wifi!');
         logger.log('lat=' + location.latitude + ' lon=' + location.longitude);
+
+        var scanResults = {
+            device_model: device.model,
+            droid_version: device.version,
+            app_version: $rootScope.APPLICATION_VERSION,
+            device_mac: $rootScope.settings.uploadMacAddress ? device.uuid : "",
+
+            time: location.time,
+
+            altitude: location.altitude,
+            lat: location.latitude,
+            lng: location.longitude,
+            acc: location.accuracy,
+        };
+
+        // TODO: Figure out if startScan should be called before getScanResults?
         WifiWizard.getScanResults(function(results) {
+            // If time has been too long, cancel
+            // TODO: figure out time
+            if (currentTime - scanResults.time > 1000) {
+              return;
+            }
+
             logger.log('Wifi results:')
             logger.log(results.length + ' networks found');
             // Convert results format for API
@@ -52,33 +79,23 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
                 });
             } else {
                 for (var i = 0; i < results.length; i++) {
-                    readings.push({
-                        level: results[i].level,
-                        BSSID: results[i].BSSID,
-                        SSID: results[i].SSID,
-                        caps: results[i].capabilities,
-                        freq: results[i].frequency
-                    });
+                    // TODO convert to same units, wifi timestamp is in microseconds since boot
+                    // Assuming units are milliseconds
+                    if (Math.abs(scanResults.time - resuts[i].timestamp) < 1000) {
+                      readings.push({
+                          level: results[i].level,
+                          BSSID: results[i].BSSID,
+                          SSID: results[i].SSID,
+                          caps: results[i].capabilities,
+                          freq: results[i].frequency
+                      });
+                    }
                 }
             }
 
 
             // Create scanResults object for API
-            var scanResults = {
-                device_model: device.model,
-                droid_version: device.version,
-                app_version: $rootScope.APPLICATION_VERSION,
-                device_mac: $rootScope.settings.uploadMacAddress ? device.uuid : "",
-
-                time: location.time,
-
-                altitude: location.altitude,
-                lat: location.latitude,
-                lng: location.longitude,
-                acc: location.accuracy,
-
-                readings: readings
-            };
+            scanResults['readings'] = readings;
 
             // Save scanResults for bulk upload later
             logger.log('saving results');
@@ -162,6 +179,30 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
 
         backgroundGeoLocation.configure(scan, scanError, conf);
         configured = true;
+
+        // Start a periodic notification to restart scanning because it seems
+        // to periodically stop
+        cordova.plugins.notification.local.schedule({
+            id: 1,
+            title: "WiFind",
+            text: "Restarting Scanning",
+            //firstAt: monday_9_am,
+            every: 120 //every 120 minutes
+            //sound: "file://sounds/reminder.mp3",
+            //icon: "http://icons.com/?cal_id=1",
+            //data: { meetingId:"123#fg8" }
+        });
+
+        // Handle when the notification is triggered
+        cordova.plugins.notification.local.on("trigger", function (notification) {
+            logger.log("RESTARTING SCANNING, BRO");
+            //Disable scanning
+            handleScanningSetting(false);
+            handleScanningSetting($rootScope.settings.enableScanning);
+
+            // Clear the notification automatically
+            cordova.plugins.notification.local.clear(1, function () {}, scope);
+        });
 
         handleScanningSetting($rootScope.settings.enableScanning);
     };

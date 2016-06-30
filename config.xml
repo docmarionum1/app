@@ -33,6 +33,7 @@
   <plugin name="cordova-plugin-app-version"/>
   <plugin name="cordova-plugin-app-preferences"/>
   <plugin name="cordova-plugin-autostart"/>
+  <plugin name="cordova-plugin-local-notifications"/>
 
   <plugin name="org.apache.cordova.splashscreen"/>
   <preference name="SplashScreen" value="screen"/>
