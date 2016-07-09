@@ -56,7 +56,25 @@ div, .item {
   margin: 0px;
   border: none;
   color: white;
-  height: 18vh;
+  /*height: 18vh;*/
+  flex-grow: 1;
+  position: relative;
+}
+
+.main-page-list .item > div {
+  height: 100%;
+  position: absolute;
+  top: 0;
+}
+
+.main-page-list .item  > div > div {
+  display: table;
+  height: 100%;
+}
+
+.main-page-list .item  > div > div > div {
+  display: table-cell;
+  vertical-align: middle;
 }
 
 main-page-list .list {
@@ -85,4 +103,22 @@ main-page-list .list {
   font-weight: normal;
   font-size: 75% !important;
   line-height: 100%;
+}
+
+.main-page-list .list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+.scroll {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-page-list {
+  flex-grow: 1;
+  position: relative;
 }
