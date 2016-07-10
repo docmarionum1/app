@@ -25,7 +25,9 @@
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
-  <plugin name="wifiwizard"/>
+  <!--<plugin name="wifiwizard"/>-->
+  <plugin spec="https://github.com/jeffcharles/WifiWizard.git#scan-and-list-master" source="git" />
+  <plugin spec="https://github.com/litehelpers/Cordova-sqlite-evcore-extbuild-free" source="git" />
   <plugin name="cordova-plugin-mauron85-background-geolocation" source="npm"/>
   <plugin name="cordova-plugin-whitelist"/>
   <plugin name="cordova-plugin-device"/>
@@ -33,7 +35,7 @@
   <plugin name="cordova-plugin-app-version"/>
   <plugin name="cordova-plugin-app-preferences"/>
   <plugin name="cordova-plugin-autostart"/>
-  <plugin name="cordova-plugin-local-notifications"/>
+  <plugin spec="https://github.com/docmarionum1/cordova-plugin-local-notifications.git" source="git"/>
 
   <plugin name="org.apache.cordova.splashscreen"/>
   <preference name="SplashScreen" value="screen"/>

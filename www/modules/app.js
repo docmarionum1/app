@@ -35,6 +35,11 @@ angular.module('WiFind.app', [
         cordova.getAppVersion.getVersionNumber().then(function (version) {
             $rootScope.APPLICATION_VERSION = version;
         });
+
+        $rootScope.$apply(function() {
+            scanning.init();
+        });
+
     });
 
     $rootScope.$watch(

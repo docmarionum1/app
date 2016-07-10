@@ -12,7 +12,7 @@ angular.module('WiFind.Logging', [])
             if ($rootScope.settings && $rootScope.settings.debug) {
                 // Append message to beginning of log and cut off at 10000
                 // characters.
-                this._log = ($filter('date')(new Date(), 'HH:mm:ss - ') + message + "<br/>" + this._log).substring(0, 10000);
+                this._log = ($filter('date')(new Date(), 'HH:mm:ss:sss - ') + message + "<br/>" + this._log).substring(0, 10000);
 
                 if (this._scope && !this._scope.$$phase) {
                     this._scope.$apply();
