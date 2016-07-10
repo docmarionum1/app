@@ -58,7 +58,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
             logger.log("Scan Returned");
             var scan_distance = ((new Date().getTime() - location.time)/1000 * location.speed);
             logger.log("Distance = " + scan_distance);
-            if (scan_distance > 5) {
+            if (scan_distance > 10) {
                 logger.log("scan distance too far!");
                 return;
             }
@@ -233,12 +233,12 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         // Start a periodic notification to restart scanning because it seems
         // to periodically stop
         // Frequency in minutes
-        var freq = 2;
+        var freq = 120;
         cordova.plugins.notification.local.schedule({
             id: 1,
             title: "WiFind",
             text: "Restarting",
-            //firstAt: new Date(new Date().getTime() + freq*60),
+            at: new Date(new Date().getTime() + freq*60),
             every: freq //every 120 minutes
         });
 

@@ -122,3 +122,7 @@ main-page-list .list {
   flex-grow: 1;
   position: relative;
 }
+
+.about-page {
+    padding: 15px !important;
+}
