@@ -7,9 +7,26 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
     var currentlyScanning = false;
     var timeout = 0;
     var db;
+    var uploading = false;
+    var tickCounter = 0;
+
+    // Interval to keep app active?
+    setInterval(function() {
+        // Every hour
+        if (++tickCounter == 6) {
+            tickCounter = 0;
+
+            // Restart scanning process
+            logger.log("RESTARTING SCANNING, BRO");
+            //Disable scanning
+            handleScanningSetting(false);
+            handleScanningSetting($rootScope.settings.enableScanning);
+        }
+    }, 600000);
 
     var tryUpload = function() {
         // If we have a network connection and at least 10 scan results
+        uploading = true;
         var keys = localStorageService.keys();
         var online = navigator.connection.type !== Connection.NONE;
         if (online && keys.length >= 10 && --timeout < 0) {
@@ -27,12 +44,18 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
                 for (var i = 0; i < keys.length; i++) {
                     localStorageService.remove(keys[i]);
                 }
+
+                uploading = false;
             }, function(res) {
                 logger.log('upload failed :(');
 
                 // If upload fails, don't try uploading for a bit
                 timeout = 60;
+
+                uploading = false;
             });
+        } else {
+            uploading = false;
         }
     };
 
@@ -102,7 +125,9 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
 
             // Attempt to upload if conditions are right
             $rootScope.$apply(function () {
-                tryUpload();
+                if (!uploading) {
+                    tryUpload();
+                }
 
                 $rootScope.networks = results;
             });
@@ -110,7 +135,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
             logger.log('WifiWizard Error!');
         });
 
-        backgroundGeoLocation.finish();
+        //backgroundGeoLocation.finish();
     };
 
     var scanError = function(error) {
@@ -179,7 +204,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
 
         var conf = {
             debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
-            stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
+            stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates
             locationService: backgroundGeoLocation.provider.ANDROID_DISTANCE_FILTER_PROVIDER,
             notificationTitle: 'WiFind',
             notificationText: 'Background location tracking is enabled.',
@@ -233,7 +258,8 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         // Start a periodic notification to restart scanning because it seems
         // to periodically stop
         // Frequency in minutes
-        var freq = 120;
+        cordova.plugins.notification.local.clear(1, function () {});
+        /*var freq = 1;
         cordova.plugins.notification.local.schedule({
             id: 1,
             title: "WiFind",
@@ -251,7 +277,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
 
             // Clear the notification automatically
             cordova.plugins.notification.local.clear(1, function () {});
-        });
+        });*/
 
         //Clear notification when app closed.
         //window.addEventListener('unload', function() {
