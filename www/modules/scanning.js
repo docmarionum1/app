@@ -79,7 +79,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         logger.log("Before Scan");
         WifiWizard.scan(function(results) {
             logger.log("Scan Returned");
-            var scan_distance = ((new Date().getTime() - location.time)/1000 * location.speed);
+            var scan_distance = Math.abs((new Date().getTime() - location.time)/1000 * location.speed);
             logger.log("Distance = " + scan_distance);
             if (scan_distance > 10) {
                 logger.log("scan distance too far!");
@@ -122,6 +122,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
             // Save scanResults for bulk upload later
             logger.log('saving results');
             localStorageService.set(location.time, scanResults);
+            logger.log('Scan count = ' + localStorageService.keys().length);
 
             // Attempt to upload if conditions are right
             $rootScope.$apply(function () {
