@@ -1,40 +1,63 @@
+// The meat of the WiFind app.  Contains all the logic for GPS tracking and
+// Wi-Fi scanning.
+//
 angular.module('WiFind.Scanning', ['WiFind.Logging'])
 .factory('scanning', function(
     $rootScope, $http, $filter,
     logger, API, localStorageService
 ) {
+    // Whether or not backgroundGeoLocation has been configured yet
     var configured = false;
+
+    // Whether the app is currently scanning
+    // (i.e. whether backgroundGeoLocation) is started.
     var currentlyScanning = false;
+
+    // A counter that gets increased when the app encounters upload trouble.
+    // Only attempts to upload when timeout is less than 0.
     var timeout = 0;
+
+    // A varible to hold the local sqlite database pointer
     var db;
+
+    // Whether the app is currently in the upload function.  Won't try and
+    // upload again during this time.
     var uploading = false;
+
+    // Counts once every ten minutes and restarts backgroundGeoLocation after
+    // 6 ticks.
     var tickCounter = 0;
 
-    // Interval to keep app active?
+    // Start an interval to make sure that backgroundGeoLocation doesn't die.
+    // Occasionally after long time of inactivity (such as having the phone)
+    // still overnight, the backgroundGeoLocation doesn't resume.  This ensures
+    // that it will restart at least every hour.
     setInterval(function() {
-        // Every hour
         if (++tickCounter == 6) {
             tickCounter = 0;
 
-            // Restart scanning process
-            logger.log("RESTARTING SCANNING, BRO");
-            //Disable scanning
             handleScanningSetting(false);
             handleScanningSetting($rootScope.settings.enableScanning);
         }
     }, 600000);
 
+    // A function which will check whether upload conditions are met and if they
+    // are, will attempt uploading.
     var tryUpload = function() {
-        // If we have a network connection and at least 10 scan results
         uploading = true;
         var keys = localStorageService.keys();
         var online = navigator.connection.type !== Connection.NONE;
+
+        // If we have a network connection and at least 10 scan results and
+        // don't have a timeout.
         if (online && keys.length >= 10 && --timeout < 0) {
             var scans = {scans: []};
 
+            // Get each scan out of local storage.
             for (var i = 0; i < keys.length; i++) {
                 scans.scans.push(localStorageService.get(keys[i]));
             }
+
             logger.log('Uploading ' + scans.scans.length + ' scans.');
 
             // Try posting scans
@@ -59,9 +82,12 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         }
     };
 
+    // Function that is called when movement is detected by
+    // backgroundGeoLocation.
     var scan = function(location) {
         logger.log('lat=' + location.latitude + ' lon=' + location.longitude);
 
+        // Add the non-wifi data to the scan results.
         var scanResults = {
             device_model: device.model,
             droid_version: device.version,
@@ -77,23 +103,31 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         };
 
         logger.log("Before Scan");
+
+        // Scan for wifi networks
         WifiWizard.scan(function(results) {
             logger.log("Scan Returned");
+
+            // Calculate the distance moved between getting geolocation
+            // and finishing the Wi-Fi scan based on speed at the time of the
+            // scan and duration of the scan.
             var scan_distance = Math.abs((new Date().getTime() - location.time)/1000 * location.speed);
             logger.log("Distance = " + scan_distance);
+
+            // If the distance is more than 10 meters, ignore the data because
+            // it is likely inaccurate.
             if (scan_distance > 10) {
                 logger.log("scan distance too far!");
                 return;
             }
 
-            //scanResults['acc'] = location.accuracy + Math.ceil((new Date().getTime() - location.time)/1000 * location.speed);
-
             logger.log(results.length + ' networks found');
 
+            // Update the user's stats
             $rootScope.stats.current = results.length;
             storeStats(results.length);
 
-            // Convert results format for API
+
             var readings = [];
 
             if (results.length === 0) {
@@ -106,6 +140,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
                 });
             } else {
                 for (var i = 0; i < results.length; i++) {
+                    // Convert results format for API
                     readings.push({
                         level: results[i].level,
                         BSSID: results[i].BSSID,
@@ -135,17 +170,18 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         }, function(results) {
             logger.log('WifiWizard Error!');
         });
-
-        //backgroundGeoLocation.finish();
     };
 
+    // Function called when there is a backgroundGeoLocation error
     var scanError = function(error) {
         logger.log('Scan Error!');
     };
 
+    // Handle a change to the scanning enabled/disabled setting
     var handleScanningSetting = function(enable) {
         logger.log('handleScanningSetting');
 
+        // If not yet configured, return.
         if (!configured) {
             logger.log('Not yet configured!');
             return;
@@ -163,13 +199,18 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         }
     };
 
+    // Store the newly found network count into the local sqlite database.
+    // Counts are stored as a pair (date,count).
     var storeStats = function(count) {
+        // First check to see if there is an entry for the current date.
         db.executeSql("select scan_count from scan_counts WHERE day=date(datetime('now', 'localtime'));", [], function(resultSet) {
             if (resultSet.rows.length == 0) {
+                // If not, insert a new row with the current count.
                 db.executeSql("insert into scan_counts values(date(datetime('now', 'localtime'))," + count + ")", [], function(resultSet) {
                     updateStats();
                 });
             } else {
+                // If there is, update the row with the new count.
                 var new_count = resultSet.rows.item(0).scan_count + count;
                 db.executeSql("update scan_counts set scan_count = " + new_count + " where day=date(datetime('now', 'localtime'));", [], function(resultSet) {
                     updateStats();
@@ -178,6 +219,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         });
     };
 
+    // Update the stats display on the main page.
     var updateStats = function() {
         var sql = "select (select sum(scan_count) from scan_counts) as total, (select scan_count from scan_counts where day=date(datetime('now', 'localtime'))) as today, (select scan_count from scan_counts where day=date(datetime('now', 'localtime'), '-1 day')) as yesterday, (select sum(scan_count) from scan_counts where strftime('%m',day)=strftime('%m','now')) as month;";
         db.executeSql(sql, [], function(resultSet) {
@@ -191,6 +233,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         });
     };
 
+    // Configure backgroundGeoLocation plugin based on user settings.
     var configureBackgroundGeoLocation = function(value) {
         logger.log('configureBackgroundGeoLocation = ' + value);
 
@@ -198,11 +241,14 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
             return;
         }
 
+        // If there is a change in settings and backgroundGeoLocation is
+        // currently running, stop it.
         if (currentlyScanning) {
             backgroundGeoLocation.stop();
             currentlyScanning = false;
         }
 
+        // backgroundGeoLocation common settings
         var conf = {
             debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
             stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates
@@ -212,6 +258,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
             startOnBoot: $rootScope.settings.autostart
         };
 
+        // Different settings depending on the user's polling intensity setting.
         if (value === 'low') {
             conf.desiredAccuracy = 10;
             conf.stationaryRadius = 10;
@@ -232,10 +279,13 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         backgroundGeoLocation.configure(scan, scanError, conf);
         configured = true;
 
+        // Restart scanning if it's enabled
         handleScanningSetting($rootScope.settings.enableScanning);
     };
 
+    // Load the stats on startup
     var loadStats = function() {
+        // Default stats while the DB is queried
         $rootScope.stats = {
             current: 0,
             total: -1,
@@ -245,6 +295,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         };
 
         db = window.sqlitePlugin.openDatabase({ name: 'wifind.db', location: 'default', androidDatabaseImplementation: 2}, function (db) {
+            // If this is the first time the app is launched, create the table.
             db.executeSql('CREATE TABLE IF NOT EXISTS scan_counts (day date, scan_count integer)', [], function(resultSet) {
                 updateStats();
             }, function(error) {
@@ -255,42 +306,18 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         });
     };
 
+    //  Intialize things at app startup.
     var init = function() {
-        // Start a periodic notification to restart scanning because it seems
-        // to periodically stop
-        // Frequency in minutes
+        // Clear notification which may still exist from previous version.
+        // Once everyone no users are on 0.3.0 anymore, this line can be
+        // removed.
         cordova.plugins.notification.local.clear(1, function () {});
-        /*var freq = 1;
-        cordova.plugins.notification.local.schedule({
-            id: 1,
-            title: "WiFind",
-            text: "Restarting",
-            at: new Date(new Date().getTime() + freq*60),
-            every: freq //every 120 minutes
-        });
 
-        // Handle when the notification is triggered
-        cordova.plugins.notification.local.on("trigger", function (notification) {
-            logger.log("RESTARTING SCANNING, BRO");
-            //Disable scanning
-            handleScanningSetting(false);
-            handleScanningSetting($rootScope.settings.enableScanning);
-
-            // Clear the notification automatically
-            cordova.plugins.notification.local.clear(1, function () {});
-        });*/
-
-        //Clear notification when app closed.
-        //window.addEventListener('unload', function() {
-        /*window.plugins.OnDestroyPlugin.setEventListener(function() {
-            cordova.plugins.notification.local.cancel(1, function() {
-                console.log("done");
-            });
-        });*/
-
+        // load the stats DB
         loadStats();
     };
 
+    // Return the public functions
     return {
         handleScanningSetting: handleScanningSetting,
         configureBackgroundGeoLocation: configureBackgroundGeoLocation,

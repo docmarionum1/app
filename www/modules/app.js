@@ -1,8 +1,12 @@
+// The main app module.
+
+// Create the Angular module for the app.
 angular.module('WiFind.app', [
     'ionic',
     'WiFind.controllers', 'LocalStorageModule', 'WiFind.Logging', 'WiFind.Scanning'
 ])
 
+// Define the API endpoint for ingestion.
 .constant('API', {
   url: 'http://wifindproject.com/ingestion/'
 })
@@ -32,22 +36,27 @@ angular.module('WiFind.app', [
     };
 
     $ionicPlatform.ready(function() {
+        // Get the version number
         cordova.getAppVersion.getVersionNumber().then(function (version) {
             $rootScope.APPLICATION_VERSION = version;
         });
 
         $rootScope.$apply(function() {
+            // Initialize scanning once the app is ready.
             scanning.init();
         });
 
     });
 
+    // Watch the pollingIntensity config and reconfigure background geolocation
+    // if it's changed.
     $rootScope.$watch(
         'settings.pollingIntensity',
         scanning.configureBackgroundGeoLocation
     );
 })
 
+// Define the different views of the app
 .config(function($stateProvider, $urlRouterProvider, localStorageServiceProvider) {
     $stateProvider
     .state('app', {
@@ -105,5 +114,6 @@ angular.module('WiFind.app', [
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/networks');
 
+    // Configure the local storage module
     localStorageServiceProvider.setPrefix('WiFind');
 });
