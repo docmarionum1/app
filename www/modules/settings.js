@@ -1,6 +1,8 @@
 // Controls loading and saving app settings.
 
 // ## settings
+
+
 var settings = {
     // Whether to enable or disable scanning for wifi.
     'enableScanning': {

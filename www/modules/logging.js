@@ -11,6 +11,7 @@ angular.module('WiFind.Logging', [])
         _scope: null,
 
         // ## log
+
         // Add a message to the log prefixed with the timestamp.
         log: function(message) {
             if ($rootScope.settings && $rootScope.settings.debug) {
@@ -27,6 +28,7 @@ angular.module('WiFind.Logging', [])
         },
 
         // ## registerLogScope
+        
         // Register the scope that contains the log so that it can be refreshed
         // when new messages are added to the log.
         registerLogScope: function(scope) {
