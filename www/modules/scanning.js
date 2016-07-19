@@ -6,6 +6,8 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
     $rootScope, $http, $filter,
     logger, API, localStorageService
 ) {
+    // ## Global Variables
+
     // Whether or not backgroundGeoLocation has been configured yet
     var configured = false;
 
@@ -41,6 +43,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         }
     }, 600000);
 
+    // ## tryUpload
     // A function which will check whether upload conditions are met and if they
     // are, will attempt uploading.
     var tryUpload = function() {
@@ -82,6 +85,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         }
     };
 
+    // ## scan
     // Function that is called when movement is detected by
     // backgroundGeoLocation.
     var scan = function(location) {
@@ -172,11 +176,13 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         });
     };
 
+    // ## scanError
     // Function called when there is a backgroundGeoLocation error
     var scanError = function(error) {
         logger.log('Scan Error!');
     };
 
+    // ## handleScanningSetting
     // Handle a change to the scanning enabled/disabled setting
     var handleScanningSetting = function(enable) {
         logger.log('handleScanningSetting');
@@ -199,6 +205,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         }
     };
 
+    // ## storeStats
     // Store the newly found network count into the local sqlite database.
     // Counts are stored as a pair (date,count).
     var storeStats = function(count) {
@@ -219,6 +226,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         });
     };
 
+    // ## updateStats
     // Update the stats display on the main page.
     var updateStats = function() {
         var sql = "select (select sum(scan_count) from scan_counts) as total, (select scan_count from scan_counts where day=date(datetime('now', 'localtime'))) as today, (select scan_count from scan_counts where day=date(datetime('now', 'localtime'), '-1 day')) as yesterday, (select sum(scan_count) from scan_counts where strftime('%m',day)=strftime('%m','now')) as month;";
@@ -233,6 +241,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         });
     };
 
+    // ## configureBackgroundGeoLocation
     // Configure backgroundGeoLocation plugin based on user settings.
     var configureBackgroundGeoLocation = function(value) {
         logger.log('configureBackgroundGeoLocation = ' + value);
@@ -283,6 +292,7 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         handleScanningSetting($rootScope.settings.enableScanning);
     };
 
+    // ## loadStats
     // Load the stats on startup
     var loadStats = function() {
         // Default stats while the DB is queried
@@ -306,7 +316,8 @@ angular.module('WiFind.Scanning', ['WiFind.Logging'])
         });
     };
 
-    //  Intialize things at app startup.
+    // ## init
+    // Intialize things at app startup.
     var init = function() {
         // Clear notification which may still exist from previous version.
         // Once everyone no users are on 0.3.0 anymore, this line can be

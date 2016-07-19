@@ -1,5 +1,6 @@
 // Controls loading and saving app settings.
 
+// ## settings
 var settings = {
     // Whether to enable or disable scanning for wifi.
     'enableScanning': {
@@ -31,6 +32,10 @@ var settings = {
 
 angular.module('WiFind.app')
 .run(function($ionicPlatform, $rootScope, logger) {
+    // The settings module isn't used directly.  Instead it loads the settings
+    // into the `$rootScope` when the app starts up and other components
+    // of the app read the settings from there.  This module watches for any
+    // changes to the settings and if there are, saves the change.
     $ionicPlatform.ready(function() {
         $rootScope.settings = {};
         var prefs = plugins.appPreferences;

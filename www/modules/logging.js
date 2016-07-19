@@ -1,4 +1,4 @@
-// A logging module that will exposes a log function to allow for the
+// A logging module that exposes a log function to allow for the
 // log to be visible in the DOM.
 
 angular.module('WiFind.Logging', [])
@@ -10,6 +10,7 @@ angular.module('WiFind.Logging', [])
         // The scope containing the in-DOM log
         _scope: null,
 
+        // ## log
         // Add a message to the log prefixed with the timestamp.
         log: function(message) {
             if ($rootScope.settings && $rootScope.settings.debug) {
@@ -25,6 +26,7 @@ angular.module('WiFind.Logging', [])
             }
         },
 
+        // ## registerLogScope
         // Register the scope that contains the log so that it can be refreshed
         // when new messages are added to the log.
         registerLogScope: function(scope) {

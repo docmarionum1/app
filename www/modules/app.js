@@ -56,6 +56,7 @@ angular.module('WiFind.app', [
     );
 })
 
+// ## Views
 // Define the different views of the app
 .config(function($stateProvider, $urlRouterProvider, localStorageServiceProvider) {
     $stateProvider
