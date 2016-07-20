@@ -1,6 +1,6 @@
 {
   "name": "WiFind",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "An app that maps the locations of WiFi access points.",
   "dependencies": {
     "gulp": "^3.5.6",

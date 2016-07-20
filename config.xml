@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.app359788" version="0.3.2"
+<widget id="com.ionicframework.app359788" version="0.3.3"
     xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android"
 >
   <name>WiFind</name>
@@ -14,7 +14,7 @@
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
-  <preference name="android-minSdkVersion" value="16"/>
+  <preference name="android-minSdkVersion" value="21"/>
   <preference name="BackupWebStorage" value="none"/>
   <preference name="android-build-tool" value="gradle"/>
   <preference name="keepRunning" value="true"/>
